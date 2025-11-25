@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>程式學習網站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .search-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        #searchInput {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        #searchBtn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            background: #5b8def;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        #searchBtn:hover {
+            background: #4a7de0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(91, 141, 239, 0.4);
+        }
+
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            color: #856404;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .note strong {
+            font-weight: 600;
+        }
+
+        .platforms-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .platform-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            background: #f8f9ff;
+        }
+
+        .platform-card .name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        #results {
+            margin-top: 30px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .results-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .results-title {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .result-card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .result-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #f3f4f6;
+        }
+
+        .result-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-card .description {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .result-card .url {
+            color: #667eea;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .click-hint {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9em;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+
+            #searchBtn {
+                width: 100%;
+            }
+
+            .platforms-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 程式學習網站</h1>
+            <p class="subtitle">搜尋任何程式語言，快速找到學習資源</p>
+        </header>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="輸入程式語言名稱（例如：Python, JavaScript, Rust...）" />
+                <button id="searchBtn" onclick="searchResources()">Search</button>
+            </div>
+            
+            <div class="note">
+                <strong>Note:</strong> 點擊任何搜尋結果會自動開啟新分頁，為避免被瀏覽器封鎖，請允許彈出視窗。
+            </div>
+        </div>
+
+        <div class="platforms-section">
+            <div class="section-title">常用程式學習平台</div>
+            <div class="platforms-grid">
+                <div class="platform-card" onclick="openPlatform('https://www.w3schools.com')">
+                    <div class="name">W3Schools</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://www.codecademy.com')">
+                    <div class="name">Codecademy</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://www.freecodecamp.org')">
+                    <div class="name">freeCodeCamp</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://www.youtube.com')">
+                    <div class="name">YouTube</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://stackoverflow.com')">
+                    <div class="name">Stack Overflow</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://github.com')">
+                    <div class="name">GitHub</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://www.udemy.com')">
+                    <div class="name">Udemy</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://www.coursera.org')">
+                    <div class="name">Coursera</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://leetcode.com')">
+                    <div class="name">LeetCode</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://www.hackerrank.com')">
+                    <div class="name">HackerRank</div>
+                </div>
+                <div class="platform-card" onclick="openPlatform('https://exercism.org')">
+                    <div class="name">Exercism</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function openPlatform(url) {
+            window.open(url, '_blank');
+        }
+
+        async function searchResources() {
+            const query = document.getElementById('searchInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+            
+            if (!query) {
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">🔍 正在搜尋「' + query + '」的學習資源...</div>';
+            
+            setTimeout(() => {
+                const results = generateResults(query);
+                displayResults(query, results);
+            }, 500);
+        }
+
+        function generateResults(query) {
+            return [
+                {
+                    title: `W3Schools - ${query} 教學`,
+                    description: `W3Schools 提供簡單易懂的 ${query} 教學，包含大量互動式範例和練習題。`,
+                    url: `https://www.google.com/search?q=${encodeURIComponent('site:w3schools.com ' + query + ' tutorial')}`
+                },
+                {
+                    title: `${query} 完整課程 - Codecademy`,
+                    description: `透過 Codecademy 的互動式課程學習 ${query}，適合初學者和進階學習者。`,
+                    url: `https://www.google.com/search?q=${encodeURIComponent('site:codecademy.com learn ' + query)}`
+                },
+                {
+                    title: `${query} 教學影片 - YouTube`,
+                    description: `在 YouTube 上找到最熱門的 ${query} 教學影片，從入門到精通。`,
+                    url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' tutorial beginner')}`
+                },
+                {
+                    title: `freeCodeCamp - ${query} 免費課程`,
+                    description: `freeCodeCamp 提供完全免費的 ${query} 課程，包含專題實作和認證。`,
+                    url: `https://www.google.com/search?q=${encodeURIComponent('site:freecodecamp.org ' + query)}`
+                },
+                {
+                    title: `${query} 問答社群 - Stack Overflow`,
+                    description: `在 Stack Overflow 找到 ${query} 相關問題的解答，向專業開發者學習。`,
+                    url: `https://stackoverflow.com/search?q=${encodeURIComponent(query)}`
+                },
+                {
+                    title: `${query} 範例程式碼 - GitHub`,
+                    description: `在 GitHub 上瀏覽 ${query} 的開源專案和範例程式碼，學習實戰經驗。`,
+                    url: `https://github.com/search?q=${encodeURIComponent(query + ' tutorial')}&type=repositories`
+                },
+            ];
+        }
+
+        function displayResults(query, results) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = '<div class="results-container">';
+            html += `<h3 class="results-title">🎯 找到 ${results.length} 個「${query}」學習資源</h3>`;
+            
+            results.forEach((result, index) => {
+                html += `
+                    <div class="result-card" onclick="openResult('${result.url}')">
+                        <h3>🌐 ${result.title}</h3>
+                        <div class="description">${result.description}</div>
+                        <div class="url">🔗 ${result.url}</div>
+                    </div>
+                `;
+            });
+            
+            html += '<div class="click-hint">💡 點擊任何結果卡片即可前往該網站</div>';
+            html += '</div>';
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function openResult(url) {
+            window.open(url, '_blank');
+        }
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchResources();
+            }
+        });
+    </script>
+</body>
+</html>
